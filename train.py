@@ -51,7 +51,8 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
     return score,yp.detach().numpy()
 
 
-def train(task,yaml_path,dummy_run=True):
+def train(task,dummy_run=True):
+    yaml_path = f'yaml/mlp_{task}.yaml'
     yps = []
     scores = []
     
@@ -100,9 +101,6 @@ def train(task,yaml_path,dummy_run=True):
 
     
 if __name__ == '__main__':
-    dummy_run = False 
-    task = 'ADT2GEX'
-    yaml_path = f'yaml/mlp_{task}.yaml'
-    
-    train(task=task, yaml_path=yaml_path,
-          dummy_run=dummy_run)
+    dummy_run = False
+    for task in ['ATAC2GEX','ADT2GEX','GEX2ADT']:
+        train(task=task,dummy_run=dummy_run)
