@@ -1,0 +1,12 @@
+viash
+weights
+*.ckpt
+wandb
+__pycache__
+exp
+.ipynb_checkpoints
+.nextflow*
+output
+submission.zip
+target
+work
