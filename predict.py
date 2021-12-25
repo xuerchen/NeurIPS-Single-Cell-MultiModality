@@ -21,7 +21,7 @@ def _predict(model,dl):
     yp = np.vstack(yps)
     return yp
             
-def predict(test_data_path,folds,cp='.'):
+def predict(test_data_path,folds,cp=OUT_PATH):
     y_dim,task = utils.get_y_dim(test_data_path)
     yaml_path=f"{cp}/yaml/mlp_{task}.yaml"
     config = utils.load_yaml(yaml_path)
@@ -33,7 +33,7 @@ def predict(test_data_path,folds,cp='.'):
     
     yp = 0
     for fold in folds:
-        load_path = f'{OUT_PATH}/weights/{task}_fold_{fold}/version_0/checkpoints/*'
+        load_path = f'{cp}/weights/{task}_fold_{fold}/version_0/checkpoints/*'
         print(load_path)
         ckpt = glob(load_path)[0]
         model_inf = MLP.load_from_checkpoint(ckpt,in_dim=X.shape[1],

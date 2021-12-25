@@ -1,0 +1,5 @@
+scikit-learn
+anndata
+scanpy
+pytorch
+pytorch-lightning

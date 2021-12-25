@@ -15,6 +15,7 @@ from scipy.sparse import csc_matrix
 
 from sklearn.decomposition import TruncatedSVD
 from sklearn.linear_model import LinearRegression
+import numpy as np
 
 logging.basicConfig(level=logging.INFO)
 
