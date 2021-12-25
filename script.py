@@ -46,9 +46,8 @@ input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
 # TODO: change this to the name of your method
 method_id = "simple_mlp"
 
-yaml_path=f"{meta['resources_dir']}/yaml/mlp_GEX2ADT.yaml"
-y_pred = predict(yaml_path=yaml_path,
-        test_data_path=par['input_test_mod1'],folds=[0,1,2],cp=meta['resources_dir'])
+y_pred = predict(test_data_path=par['input_test_mod1'],
+                 folds=[0,1,2],cp=meta['resources_dir'])
 
 y_pred = csc_matrix(y_pred)
 

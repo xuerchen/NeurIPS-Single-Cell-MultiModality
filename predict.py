@@ -21,8 +21,9 @@ def _predict(model,dl):
     yp = np.vstack(yps)
     return yp
             
-def predict(yaml_path,test_data_path,folds,cp='.'):
+def predict(test_data_path,folds,cp='.'):
     y_dim,task = utils.get_y_dim(test_data_path)
+    yaml_path=f"{cp}/yaml/mlp_{task}.yaml"
     config = utils.load_yaml(yaml_path)
     te1 = ad.read_h5ad(test_data_path)
     X = te1.X.toarray()
@@ -43,7 +44,7 @@ def predict(yaml_path,test_data_path,folds,cp='.'):
         yp = yp + _predict(model_inf, te_loader)
     return yp/len(folds)
 
-def sanity_check(yaml_path):
+def sanity_check():
     test_data_path = glob('output/pseudo_test/fold_1/*cite*mod2/*mod1.h5ad')
     if len(test_data_path) == 0:
         utils.generate_pseudo_test_data_all()
@@ -51,8 +52,7 @@ def sanity_check(yaml_path):
     test_data_path = test_data_path[0]
     print(test_data_path)
     
-    yp = predict(yaml_path=yaml_path,
-            test_data_path=test_data_path,folds=[2])
+    yp = predict(test_data_path=test_data_path,folds=[2])
     te2 = ad.read_h5ad(test_data_path.replace('mod1','mod2'))
     yt = te2.X.toarray()
     score = ((yp-yt)**2).mean()**0.5
@@ -60,5 +60,4 @@ def sanity_check(yaml_path):
     return yp
 
 if __name__ == '__main__':
-    yaml_path='yaml/mlp_GEX2ADT.yaml'
-    sanity_check(yaml_path)
+    sanity_check()
