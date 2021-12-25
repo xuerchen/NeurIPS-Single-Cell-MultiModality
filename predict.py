@@ -9,20 +9,6 @@ import numpy as np
 from models import MLP
 from const import PATH, OUT_PATH
 
-def copy_weight(task,commit,fold,cp='.'):
-    Path(f'{cp}/weights').mkdir(parents=True, exist_ok=True)
-    wp = f'{cp}/weights/{task}_{commit}'
-    for i in range(3):
-        w = f'{wp}_fold_{i}.ckpt'
-        if not os.path.exists(w):
-            wo = f'{OUT_PATH}/lightning_log/{task}/{commit}/fold_{i}/*/*/*/*.ckpt'
-            wo = glob(wo)
-            print(wo)
-            assert len(wo) == 1
-            wo = wo[0]
-            cmd = f'cp {wo} {w}'
-            os.system(cmd)      
-    return f'{wp}_fold_{fold}.ckpt'
 
 def _predict(model,dl):
     model = model.cuda()
@@ -35,10 +21,8 @@ def _predict(model,dl):
     yp = np.vstack(yps)
     return yp
             
-def predict(y_dim,task,yaml_path,test_data_path,folds,cp='.'):
-    
-    commit = task2commit[task]
-    
+def predict(yaml_path,test_data_path,folds,cp='.'):
+    y_dim,task = utils.get_y_dim(test_data_path)
     config = utils.load_yaml(yaml_path)
     te1 = ad.read_h5ad(test_data_path)
     X = te1.X.toarray()
@@ -48,7 +32,9 @@ def predict(y_dim,task,yaml_path,test_data_path,folds,cp='.'):
     
     yp = 0
     for fold in folds:
-        ckpt = copy_weight(task,commit,fold=fold,cp=cp)
+        load_path = f'{OUT_PATH}/weights/{task}_fold_{fold}/version_0/checkpoints/*'
+        print(load_path)
+        ckpt = glob(load_path)[0]
         model_inf = MLP.load_from_checkpoint(ckpt,in_dim=X.shape[1],
                                              out_dim=y_dim,
                                              config=config)
@@ -57,10 +43,15 @@ def predict(y_dim,task,yaml_path,test_data_path,folds,cp='.'):
         yp = yp + _predict(model_inf, te_loader)
     return yp/len(folds)
 
-def sanity_check(task2commit,yaml_path):
-    test_data_path = glob('output/pseudo_test/fold_1/*multiome*mod2/*mod1.h5ad')[0]
+def sanity_check(yaml_path):
+    test_data_path = glob('output/pseudo_test/fold_1/*cite*mod2/*mod1.h5ad')
+    if len(test_data_path) == 0:
+        utils.generate_pseudo_test_data_all()
+        test_data_path = glob('output/pseudo_test/fold_1/*cite*mod2/*mod1.h5ad')
+    test_data_path = test_data_path[0]
     print(test_data_path)
-    yp = predict(task2commit,yaml_path=yaml_path,
+    
+    yp = predict(yaml_path=yaml_path,
             test_data_path=test_data_path,folds=[2])
     te2 = ad.read_h5ad(test_data_path.replace('mod1','mod2'))
     yt = te2.X.toarray()
@@ -69,11 +60,5 @@ def sanity_check(task2commit,yaml_path):
     return yp
 
 if __name__ == '__main__':
-    task2commit = {
-        'GEX2ADT':'1050db0',
-        'ADT2GEX':'3cd1f2a',
-        'GEX2ATAC':'b3478cd',
-        'ATAC2GEX':'e2822b1',
-    }
     yaml_path='yaml/mlp_GEX2ADT.yaml'
-    sanity_check(task2commit,yaml_path)
+    sanity_check(yaml_path)

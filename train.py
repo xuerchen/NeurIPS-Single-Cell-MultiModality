@@ -51,7 +51,7 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
     return score,yp.detach().numpy()
 
 
-def train(task,yaml_path,notes='',dummy_run=True):
+def train(task,yaml_path,dummy_run=True):
     yps = []
     scores = []
     
@@ -72,7 +72,7 @@ def train(task,yaml_path,notes='',dummy_run=True):
         if dummy_run:
             logger = None
         else:
-            logger = TensorBoardLogger(save_path, name=run_name) 
+            logger = TensorBoardLogger(save_path, name='') 
         
         if dummy_run:
             X = X[:512]
@@ -92,8 +92,6 @@ def train(task,yaml_path,notes='',dummy_run=True):
         msgs[f'Fold {fold}'] = f'{score:.3f}'
         print(msg)
 
-        if not dummy_run and fold<2:
-            run.finish()
 
     yp = np.concatenate(yps)
     score = np.mean(scores)
@@ -102,9 +100,9 @@ def train(task,yaml_path,notes='',dummy_run=True):
 
     
 if __name__ == '__main__':
-    dummy_run = False
+    dummy_run = False 
     task = 'ADT2GEX'
     yaml_path = f'yaml/mlp_{task}.yaml'
     
     train(task=task, yaml_path=yaml_path,
-          notes=notes, dummy_run=dummy_run)
+          dummy_run=dummy_run)

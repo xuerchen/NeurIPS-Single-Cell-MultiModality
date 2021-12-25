@@ -315,7 +315,7 @@ def generate_pseudo_test_data_all():
             generate_pseudo_test_data(task=task, fold=fold)
 
 if __name__ == '__main__':
-    #generate_pseudo_test_data_all()
-    eval_all()
+    generate_pseudo_test_data_all()
+    #eval_all()
     #check_column_mean_var_all()
     #get_tr_te_data(task='GEX2ADT', path='./output', fold = 0)

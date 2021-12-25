@@ -42,34 +42,12 @@ input_train_mod1 = ad.read_h5ad(par['input_train_mod1'])
 input_train_mod2 = ad.read_h5ad(par['input_train_mod2'])
 input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
 
-def get_y_dim(data_path):
-    if '_cite_' in data_path:
-        if 'mod2' in data_path:
-            return 13953,"ADT2GEX"
-        elif 'rna' in data_path:
-            return 134,"GEX2ADT"
-        else:
-            assert 0
-    elif '_multiome_' in data_path:
-        if 'mod2' in data_path:
-            return 13431,"ATAC2GEX"
-        elif 'rna' in data_path:
-            return 10000,"GEX2ATAC"
-        else:
-            assert 0
 
 # TODO: change this to the name of your method
 method_id = "simple_mlp"
-_,task = get_y_dim(par['input_train_mod1'])
 
-task2commit = {
-    'GEX2ADT':'1050db0',
-    'ADT2GEX':'3cd1f2a',
-    'GEX2ATAC':'b3478cd',
-    'ATAC2GEX':'e2822b1',
-}
 yaml_path=f"{meta['resources_dir']}/yaml/mlp_GEX2ADT.yaml"
-y_pred = predict(task2commit,yaml_path=yaml_path,
+y_pred = predict(yaml_path=yaml_path,
         test_data_path=par['input_test_mod1'],folds=[0,1,2],cp=meta['resources_dir'])
 
 y_pred = csc_matrix(y_pred)
