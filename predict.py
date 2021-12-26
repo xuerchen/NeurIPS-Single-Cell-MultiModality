@@ -39,16 +39,18 @@ def predict(test_data_path,folds,cp=OUT_PATH):
         model_inf = MLP.load_from_checkpoint(ckpt,in_dim=X.shape[1],
                                              out_dim=y_dim,
                                              config=config)
-        te_loader = DataLoader(te_ds, batch_size=config.batch_size,num_workers=8,
+        te_loader = DataLoader(te_ds, batch_size=config.batch_size,num_workers=0,
                         shuffle=False, drop_last=False)
         yp = yp + _predict(model_inf, te_loader)
     return yp/len(folds)
 
 def sanity_check():
-    test_data_path = glob('output/pseudo_test/fold_1/*cite*mod2/*mod1.h5ad')
+    path = 'output/pseudo_test/fold_1/*cite*rna/*mod1.h5ad'
+    path = 'output/datasets_phase1v2/predict_modality/*cite*rna/*mod1.h5ad'
+    test_data_path = glob(path)
     if len(test_data_path) == 0:
         utils.generate_pseudo_test_data_all()
-        test_data_path = glob('output/pseudo_test/fold_1/*cite*mod2/*mod1.h5ad')
+        test_data_path = glob('output/pseudo_test/fold_1/*cite*rna/*mod1.h5ad')
     test_data_path = test_data_path[0]
     print(test_data_path)
     

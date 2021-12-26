@@ -12,11 +12,16 @@ method_id = meta['functionality_name']
 command = "./" + method_id
 
 # define some filenames
+
+tag = 'cite'
+#tag = 'multiome'
+#mod = 'rna'
+mod = 'mod2'
 testpar = {
-    'input_train_mod1': 'sample_data/openproblems_bmmc_cite_phase1v2_rna/openproblems_bmmc_cite_phase1v2_rna.censor_dataset.output_test_mod1.h5ad',
-    'input_train_mod2': 'sample_data/openproblems_bmmc_cite_phase1v2_rna/openproblems_bmmc_cite_phase1v2_rna.censor_dataset.output_test_mod2.h5ad',
-    'input_test_mod1': 'sample_data/openproblems_bmmc_cite_phase1v2_rna/openproblems_bmmc_cite_phase1v2_rna.censor_dataset.output_test_mod1.h5ad',
-    'input_test_mod2': 'sample_data/openproblems_bmmc_cite_phase1v2_rna/openproblems_bmmc_cite_phase1v2_rna.censor_dataset.output_test_mod2.h5ad',
+    'input_train_mod1': f'sample_data/openproblems_bmmc_{tag}_phase1v2_{mod}/openproblems_bmmc_{tag}_phase1v2_{mod}.censor_dataset.output_test_mod1.h5ad',
+    'input_train_mod2': f'sample_data/openproblems_bmmc_{tag}_phase1v2_{mod}/openproblems_bmmc_{tag}_phase1v2_{mod}.censor_dataset.output_test_mod2.h5ad',
+    'input_test_mod1': f'sample_data/openproblems_bmmc_{tag}_phase1v2_{mod}/openproblems_bmmc_{tag}_phase1v2_{mod}.censor_dataset.output_test_mod1.h5ad',
+    'input_test_mod2': f'sample_data/openproblems_bmmc_{tag}_phase1v2_{mod}/openproblems_bmmc_{tag}_phase1v2_{mod}.censor_dataset.output_test_mod2.h5ad',
    "output": "output.h5ad"
 }
 
