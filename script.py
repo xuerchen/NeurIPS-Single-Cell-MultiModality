@@ -49,10 +49,12 @@ input_test_mod1 = ad.read_h5ad(par['input_test_mod1'])
 method_id = "simple_mlp"
 
 y_dim,task = get_y_dim(par['input_test_mod1'])
+ymean = np.asarray(input_train_mod2.X.mean(axis=0))
 if task == 'GEX2ATAC':
-    y_pred = np.asarray(input_train_mod2.X.mean(axis=0))*np.ones([input_test_mod1.shape[0],y_dim])
+    y_pred = ymean*np.ones([input_test_mod1.shape[0],y_dim])
 else:
-    y_pred = predict(test_data_path=par['input_test_mod1'],
+    
+    y_pred = predict(ymean,test_data_path=par['input_test_mod1'],
                  folds=[0,1,2],cp=meta['resources_dir'])
 
 y_pred = csc_matrix(y_pred)
