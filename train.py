@@ -15,6 +15,8 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
     config = utils.load_yaml(yaml_path)
     X = torch.from_numpy(X).float()
     y = torch.from_numpy(y).float()
+    ymean = torch.mean(y,dim=0,keepdim=True)
+    
     tr_ds = TensorDataset(X,y)
     tr_loader = DataLoader(tr_ds, batch_size=config.batch_size,num_workers=8,
                         shuffle=True, drop_last=True)
@@ -38,7 +40,7 @@ def _train(X, y, Xt, yt, enable_ckpt, logger, yaml_path):
                          callbacks=cb,
                          progress_bar_refresh_rate=5)
     
-    net = MLP(X.shape[1],y.shape[1],config)
+    net = MLP(X.shape[1],y.shape[1],ymean,config)
     trainer.fit(net, tr_loader, te_loader)
     
     cp = 'best' if enable_ckpt else None
@@ -102,5 +104,5 @@ def train(task,dummy_run=True):
     
 if __name__ == '__main__':
     dummy_run = False
-    for task in ['ATAC2GEX','ADT2GEX','GEX2ADT']:
+    for task in ['GEX2ADT','ADT2GEX','ATAC2GEX']:
         train(task=task,dummy_run=dummy_run)
